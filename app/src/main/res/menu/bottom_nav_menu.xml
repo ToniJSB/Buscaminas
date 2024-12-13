@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_settings"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:icon="@drawable/baseline_ac_unit_24"
+        android:enabled="true"
+        android:title="@string/settings"
+        android:titleTextColor="#FFFFFF"
+        />
+
+    <item
+        android:id="@+id/nav_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/baseline_home_24"
+        android:enabled="true"
+        android:title="@string/game"
+        android:titleTextColor="#FFFFFF"
+
+    />
+
+    <item
+        android:id="@+id/nav_stats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:icon="@drawable/baseline_chart_24"
+        android:enabled="true"
+        android:title="@string/stats"
+        android:titleTextColor="#FFFFFF"
+
+    />
+
+</menu>

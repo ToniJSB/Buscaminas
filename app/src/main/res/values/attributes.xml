@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="position" format="string"/>
+    <attr name="isMine" format="boolean"/>
+    <attr name="visible" format="boolean"/>
+    <attr name="minesNear" format="integer"/>
+
+    <attr name="state" format="enum">
+        <enum name="TAPADO" value="0"/>
+        <enum name="BANDERA" value="1"/>
+        <enum name="VOLTEADO" value="2"/>
+        <enum name="MINA" value="3"/>
+    </attr>
+</resources>

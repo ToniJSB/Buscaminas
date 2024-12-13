@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="light_grey">#FFC0C0C0</color>
+
+    <color name="brown">#FF793C09</color>
+    <color name="green">#FF00FF00</color>
+    <color name="blue">#FF0000FF</color>
+    <color name="cyan">#FF00FFF0</color>
+
+    <color name="dirt">#914F1E</color>
+    <color name="dark_brown_lighter">#B36E43</color>
+    <color name="dark_brown_darker">#703F17</color>
+
+    <color name="light_brown_darker">#B08966</color>
+    <color name="sand">#C69E77</color>
+    <color name="light_dirt">#DEAC80</color>
+    <color name="light_brown_lighter">#E7C3A3</color>
+    <color name="cream_darker">#D1B9A4</color>
+    <color name="skin">#F7DCB9</color>
+
+    <color name="yellow">#DFAF12</color>
+    <color name="orange">#E97D23</color>
+    <color name="red">#D1393C</color>
+
+    <!-- Nuevas Variaciones Relacionadas -->
+    <color name="mud">#5E3921</color>
+    <color name="peach">#FFCBA8</color>
+    <color name="clay">#8B5B3E</color>
+    <color name="terracotta">#D48B5B</color>
+
+</resources>

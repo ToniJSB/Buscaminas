@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".GameFragment">
+    <TextView
+        android:id="@+id/chrono"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="top"
+        android:gravity="center"
+        android:text="00:00"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="705dp"
+        android:scrollbars="horizontal"
+        android:layout_marginTop="?attr/actionBarSize"
+        >
+
+        <GridLayout
+            android:id="@+id/grid_buscaminas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+
+        </GridLayout>
+
+    </ScrollView>
+
+
+</FrameLayout>
