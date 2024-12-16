@@ -20,6 +20,13 @@
     <color name="cream_darker">#D1B9A4</color>
     <color name="skin">#F7DCB9</color>
 
+    <color name="casilla_4">#4a2d07</color>
+    <color name="casilla_1">#402808</color>
+    <color name="casilla_5">#452904</color>
+    <color name="casilla_2">#402706</color>
+    <color name="casilla_3">#382204</color>
+<!--    <color name="casilla_6">#F7DCB9</color>-->
+
     <color name="yellow">#DFAF12</color>
     <color name="orange">#E97D23</color>
     <color name="red">#D1393C</color>
@@ -29,5 +36,8 @@
     <color name="peach">#FFCBA8</color>
     <color name="clay">#8B5B3E</color>
     <color name="terracotta">#D48B5B</color>
+
+
+
 
 </resources>
