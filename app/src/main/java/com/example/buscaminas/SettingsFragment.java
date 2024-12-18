@@ -55,6 +55,8 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
@@ -66,6 +68,27 @@ public class SettingsFragment extends Fragment {
         Button buttonFacil = view.findViewById(R.id.buttonFacil);
         Button buttonNormal = view.findViewById(R.id.buttonNormal);
         Button buttonDificil = view.findViewById(R.id.buttonDificil);
+        if (buttonDificil.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
+            buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+            buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
+            buttonDificil.setBackgroundResource(R.drawable.button_marked);
+        }
+        else if (buttonNormal.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
+            buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+            buttonNormal.setBackgroundResource(R.drawable.button_marked);
+            buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+        }
+        else if (buttonFacil.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
+            buttonFacil.setBackgroundResource(R.drawable.button_marked);
+            buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
+            buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+        }
+        else{
+            buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+            buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
+            buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+
+        }
         Bundle bundle = new Bundle();
         buttonFacil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +96,9 @@ public class SettingsFragment extends Fragment {
                 bundle.putInt("rows",10);
                 bundle.putInt("columns",10);
                 bundle.putInt("mines",11);
+                buttonFacil.setBackgroundResource(R.drawable.button_marked);
+                buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
+                buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
                 GameFragment targetFragment = MainActivity.gameFragment;
                 targetFragment.setArguments(bundle);
             }
@@ -83,6 +109,9 @@ public class SettingsFragment extends Fragment {
                 bundle.putInt("rows",15);
                 bundle.putInt("columns",15);
                 bundle.putInt("mines",15);
+                buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+                buttonNormal.setBackgroundResource(R.drawable.button_marked);
+                buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
                 GameFragment targetFragment = MainActivity.gameFragment;
                 targetFragment.setArguments(bundle);            }
         });
@@ -92,6 +121,9 @@ public class SettingsFragment extends Fragment {
                 bundle.putInt("rows",25);
                 bundle.putInt("columns",25);
                 bundle.putInt("mines",25);
+                buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+                buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
+                buttonDificil.setBackgroundResource(R.drawable.button_marked);
                 GameFragment targetFragment = MainActivity.gameFragment;
                 targetFragment.setArguments(bundle);
             }

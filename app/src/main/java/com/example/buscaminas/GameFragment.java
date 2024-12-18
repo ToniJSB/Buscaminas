@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -58,6 +60,8 @@ public class GameFragment extends Fragment {
     private int clicks;
     private boolean firstTouch = true;
     private String timer = "00:00";
+    private int maxCells;
+    private int cellShowed;
     private final Map<String, Integer> difficulty = new HashMap<>(){{
         put(ROWS, 10);
         put(MINES, 11);
@@ -114,6 +118,9 @@ public class GameFragment extends Fragment {
         firstTouch = true;
         minesFlagged = 0;
         clicks = 0;
+        maxCells = difficulty.get(ROWS) * COLUMNSQ - difficulty.get(MINES);
+        cellShowed = 0;
+
 
         createCanvas(view);
 
@@ -171,8 +178,11 @@ public class GameFragment extends Fragment {
                 simplyfied[i][j] = 0;
             }
         }
-
+        view.setForegroundGravity(Gravity.CENTER);
         GridLayout grdL = view.findViewById(R.id.grid_buscaminas);
+//        grdL.setPadding(0,0,0,0);
+
+        grdL.setBackgroundResource(R.color.light_grey);
         for (int i = 0; i < difficulty.get(ROWS); i++) {
             LinearLayout ll = getLinearLayout(COLUMNSQ, board[i], i);
             grdL.addView(ll);
@@ -188,6 +198,7 @@ public class GameFragment extends Fragment {
         int parentWidth = metrics.widthPixels; // ancho absoluto en pixels
         LinearLayout ll = new LinearLayout(getContext());
         ll.setOrientation(LinearLayout.HORIZONTAL);
+        ViewGroup.LayoutParams layoutParams = new GridLayout.LayoutParams( new ViewGroup.LayoutParams((parentWidth/COLUMNSQ) - (15/COLUMNSQ),(parentWidth/COLUMNSQ) - (15/COLUMNSQ)));
         for (int j = 0; j < columns; j++) {
             Button button = new Button(getContext());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -208,8 +219,10 @@ public class GameFragment extends Fragment {
 
 //            button.setId(row+j);
             button.setOnClickListener(cellClick);
+            button.setBackgroundResource(R.drawable.cell_border);
+            button.setPadding(0,0,0,0);
             button.setOnLongClickListener(cellLongClick);
-            button.setLayoutParams( new GridLayout.LayoutParams( new ViewGroup.LayoutParams(parentWidth/COLUMNSQ,parentWidth/COLUMNSQ)));
+            button.setLayoutParams( layoutParams);
             ll.addView(button);
         }
         return ll;
@@ -376,6 +389,7 @@ public class GameFragment extends Fragment {
                     cell.setTag(R.attr.visible,true);
                     if ((int) cell.getTag(R.attr.minesNear) != 0){
                         cell.setText(cell.getTag(R.attr.minesNear).toString());
+
                     }
                     setAroundClick(parentView, aroundClicked[i], positionDone, false);
                 }
@@ -468,7 +482,7 @@ public class GameFragment extends Fragment {
     private void printMines(View parentView, String[] mines){
         for (String mina : mines){
             Button mine =(Button) ViewFinder.findViewsWithTag(parentView, mina, R.attr.position ).get(0);
-            mine.setBackgroundResource(R.color.red);
+            mine.setBackgroundResource(R.drawable.mine_cell);
 
         }
     }
@@ -501,9 +515,7 @@ public class GameFragment extends Fragment {
             if (!button.getTag(R.attr.state).equals(State.BANDERA)){
                 if(button.getTag(R.attr.isMine).equals(true)){
                     clicks++;
-                    Toast toast = new Toast(getContext());
-                    toast.setText("Has perdido con "+clicks+" clicks");
-                    toast.show();
+
                     stopChrono((View) button.getParent().getParent());
                     System.out.println(v.findViewById(R.id.chrono));
                     printMines((View) button.getParent().getParent(), mines);
@@ -520,6 +532,17 @@ public class GameFragment extends Fragment {
                         button.setText(v.getTag(R.attr.minesNear).toString());
                     }
                     setAroundClick((View)v.getParent().getParent(), v.getTag(R.attr.position).toString(), new HashSet<>(), false);
+                    System.out.println(cellShowed);
+                    System.out.println("cellShowed");
+                    System.out.println(maxCells);
+                    List<View> showedButtons = ViewFinder.findViewsWithTag((View)v.getParent().getParent(), State.VOLTEADO, R.attr.state);
+                    if (showedButtons.size() == maxCells){
+                        stopChrono((View) button.getParent().getParent());
+                        int tmpMinesFlagged = minesFlagged;
+                        minesFlagged = difficulty.get(MINES) / 3;
+                        minesFlagged += tmpMinesFlagged;
+                        showFinishForm((View) button.getParent().getParent());
+                    }
                 }
             }
             for(String mina : mines){
@@ -592,6 +615,10 @@ public class GameFragment extends Fragment {
     private void showFinishForm(View parent) {
         // Inflar el diseño del menú flotante
         View popupView = LayoutInflater.from(getContext()).inflate(R.layout.game_finished, null);
+        PopupWindow popupWindow = new PopupWindow(popupView,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                true);
 
         TextInputEditText textName = popupView.findViewById(R.id.editTextName);
 
@@ -599,28 +626,52 @@ public class GameFragment extends Fragment {
         buttonSend.setOnClickListener(new View.OnClickListener() {
                   @Override
                   public void onClick(View v) {
-                    // recoger data
                     String userName = textName.getText().toString();
-                    String userNameSaved = PreferencesHelper.getData(getContext(), "", "names", "");
-                    if (userNameSaved.isEmpty()){
-                        PreferencesHelper.saveData(getContext(), "", "names", userName);
-                    }else{
-                        PreferencesHelper.saveData(getContext(), "", "names", userNameSaved + "|" +userName);
-                    }
+                    if (!userName.isEmpty() && !userName.contains("|")){
+                        String userNameSaved = PreferencesHelper.getData(getContext(), "", "names", "");
+                        int score = calcScore();
+                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        if (userNameSaved.isEmpty()){
+                            PreferencesHelper.saveData(getContext(), "", "names", userName);
+                            PreferencesHelper.saveData(getContext(), userName, "Clicks", String.valueOf(clicks));
+                            PreferencesHelper.saveData(getContext(), userName, "Time", timer);
+                            PreferencesHelper.saveData(getContext(), userName, "Mines", String.valueOf(minesFlagged));
+                            PreferencesHelper.saveData(getContext(), userName, "Score", String.valueOf(score));
+                            fragmentTransaction.replace(R.id.fragment_container, MainActivity.statsFragment);
+                            fragmentTransaction.commit();
 
-                    PreferencesHelper.saveData(getContext(), userName, "clicks", String.valueOf(clicks));
-                    PreferencesHelper.saveData(getContext(), userName, "time", timer);
-                    PreferencesHelper.saveData(getContext(), userName, "mines", String.valueOf(minesFlagged));
-                    int score = calcScore();
-                    PreferencesHelper.saveData(getContext(), userName, "score", String.valueOf(score));
+                            MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_stats);
+                            popupWindow.dismiss();
+                        }
+                        else{
+                            if (!userNameSaved.contains(userName)){
+                                PreferencesHelper.saveData(getContext(), "", "names", userNameSaved + "|" +userName);
+                                PreferencesHelper.saveData(getContext(), userName, "Clicks", String.valueOf(clicks));
+                                PreferencesHelper.saveData(getContext(), userName, "Time", timer);
+                                PreferencesHelper.saveData(getContext(), userName, "Mines", String.valueOf(minesFlagged));
+                                PreferencesHelper.saveData(getContext(), userName, "Score", String.valueOf(score));
+                                fragmentTransaction.replace(R.id.fragment_container, MainActivity.statsFragment);
+                                fragmentTransaction.commit();
+                                MainActivity.bottomNavigationView.setSelectedItemId(R.id.nav_stats);
+                                popupWindow.dismiss();
+                            }
+                            else{
+                                Toast alreadyExists = new Toast(getContext());
+                                alreadyExists.setText("Name already exists");
+                                alreadyExists.show();
+                            }
+                        }
+
+                    }
+                    else{
+                        Toast undefinedName = new Toast(getContext());
+                        undefinedName.setText("Missing name");
+                        undefinedName.show();
+                    }
 
                   }
               });
-        // Crear el PopupWindow
-        PopupWindow popupWindow = new PopupWindow(popupView,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                true); // True para que el popup sea interactivo
 
         popupWindow.showAtLocation(parent, Gravity.CENTER, 0,0);
 

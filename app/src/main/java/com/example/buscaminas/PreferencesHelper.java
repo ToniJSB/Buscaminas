@@ -32,5 +32,19 @@ public class PreferencesHelper {
         return sharedPreferences.getString(key, defaultValue);
     }
 
+    public static void clearAll(Context context) {
+        String[] names = getData(context,"","names","").split("\\|");
+        for (String name : names){
+            clearData(context,name);
+        }
+        clearData(context,"");
+    }
+
+    private static void clearData(Context context, String userName) {
+        SharedPreferences sharedPreferences = getSharedPreferences(context, userName);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+    }
 
 }

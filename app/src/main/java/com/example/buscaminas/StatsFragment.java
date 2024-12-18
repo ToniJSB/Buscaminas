@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -79,13 +80,12 @@ public class StatsFragment extends Fragment {
     private void createStats(View view) {
 
         String[] names = PreferencesHelper.getData(getContext(),"","names","").split("\\|");
-        List<String> statsCols = Arrays.asList(new String[]{"name", "clicks", "time", "mines", "score"});
+        List<String> statsCols = Arrays.asList(new String[]{"Name", "Clicks", "Time", "Mines", "Score"});
         // Las metricas permiten ver el tamaño de la pantalla
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int containerWidth = metrics.widthPixels; // ancho absoluto en pixels
         int colsLenght = statsCols.size();
-        Map<String, Map> statsUsers = new HashMap<>();
 
         GridLayout grid = view.findViewById(R.id.gridStats);
 
@@ -94,35 +94,54 @@ public class StatsFragment extends Fragment {
         titles.layout(0,0,0,0);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.setMargins(10,10,10,10);
-        params.width = containerWidth/colsLenght;
+        params.width = containerWidth/colsLenght -21;
         params.height = 100;
         for (String col : statsCols){
-            TextView tv = new TextView(getContext());
-            tv.setText(col);
-            tv.setLayoutParams(params);
-            System.out.println("por que no agrega");
+            TextView tv = createTextView(col, params);
+            tv.setBackgroundResource(R.drawable.titles_cell);
             titles.addView(tv);
         }
 
         grid.addView(titles);
 
+        ScrollView scrollView = new ScrollView(getContext());
+        scrollView.isVerticalScrollBarEnabled();
+        ViewGroup.LayoutParams paramsScroll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        scrollView.setLayoutParams(paramsScroll);
+
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)));
+        GridLayout gridLayout = new GridLayout(getContext());
+        gridLayout.setOrientation(GridLayout.VERTICAL);
+
         for (String name : names){
-            LinearLayout ll = new LinearLayout(getContext());
-            ll.setOrientation(LinearLayout.HORIZONTAL);
-            for (String col : statsCols){
-                TextView textVValues;
-                if (col.equals("name")){
-                    textVValues = createTextView(name, params);
-                }else{
-                    String value = PreferencesHelper.getData(getContext(),name,col,"");
-                    textVValues = createTextView(value, params);
+            System.out.println(name);
+            System.out.println("name");
+            if (!name.equals("")){
+
+                LinearLayout ll = new LinearLayout(getContext());
+                ll.setOrientation(LinearLayout.HORIZONTAL);
+                for (String col : statsCols){
+                    TextView textVValues;
+                    if (col.equals("Name")){
+                        textVValues = createTextView(name, params);
+                    }else{
+                        String value = PreferencesHelper.getData(getContext(),name,col,"");
+                        System.out.println("value");
+                        System.out.println(value);
+                        textVValues = createTextView(value, params);
+                    }
+                    ll.addView(textVValues);
                 }
-                ll.addView(textVValues);
+                ll.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(containerWidth,126)));
+                gridLayout.addView(ll);
             }
-            ll.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(containerWidth,200)));
-            grid.addView(ll);
-            grid.setOrientation(GridLayout.VERTICAL);
         }
+//        grid.setOrientation(GridLayout.VERTICAL);
+        linearLayout.addView(gridLayout);
+        scrollView.addView(linearLayout);
+        grid.addView(scrollView);
     }
     private TextView createTextView(String value, GridLayout.LayoutParams params){
         TextView tv = new TextView(getContext());
@@ -134,10 +153,12 @@ public class StatsFragment extends Fragment {
             tv.setRight(0);
             tv.setTop(0);
         }
-        tv.setTextColor(getResources().getColor(R.color.black));
-//        tv.setBackgroundResource(R.color.brown);
+        tv.setTextColor(getResources().getColor(R.color.platinum_light));
+        tv.setBackgroundResource(R.drawable.textview_border);
         tv.setLayoutParams(params);
         tv.setText(value);
         return tv;
     }
+
+
 }

@@ -25,7 +25,67 @@
     <color name="casilla_5">#452904</color>
     <color name="casilla_2">#402706</color>
     <color name="casilla_3">#382204</color>
-<!--    <color name="casilla_6">#F7DCB9</color>-->
+
+
+    <color name="base_1_dark">#341F05</color>
+    <color name="base_1">#4A2D07</color>
+    <color name="base_1_light">#603B0A</color>
+
+    <color name="base_2_dark">#2D1C05</color>
+    <color name="base_2">#402808</color>
+    <color name="base_2_light">#57350B</color>
+
+    <color name="base_3_dark">#311D03</color>
+    <color name="base_3">#452904</color>
+    <color name="base_3_light">#5C3707</color>
+
+    <color name="base_4_dark">#2C1B04</color>
+    <color name="base_4">#402706</color>
+    <color name="base_4_light">#56350A</color>
+
+    <color name="base_5_dark">#261603</color>
+    <color name="base_5">#382204</color>
+    <color name="base_5_light">#4E3007</color>
+
+    <color name="complementary_1_dark">#7A4725</color>
+    <color name="complementary_1">#9B5B30</color>
+    <color name="complementary_1_light">#B47240</color>
+    <color name="orange_pantone">#F26419</color>
+    <color name="orange_mahogany">#C14B0B</color>
+
+    <color name="dark_prussian_blue">#202D40</color>
+    <color name="complementary_2_dark">#233146</color>
+    <color name="complementary_2">#2D4158</color>
+    <color name="indigo">#294466</color>
+    <color name="complementary_2_light">#3D5875</color>
+    <color name="marked_button">#687C92</color>
+    <color name="unmarked_button">#B7C1CC</color>
+
+    <color name="platinum_light_1">#CCCCCC</color>
+    <color name="platinum_dark">#7e7e7e</color>
+    <color name="platinum_light">#a3a3a3</color>
+
+    <color name="neutral_1_dark">#3F3026</color>
+    <color name="neutral_1">#534237</color>
+    <color name="neutral_1_light">#6A574A</color>
+
+    <color name="neutral_2_dark">#2C2B28</color>
+    <color name="neutral_2">#3B3935</color>
+    <color name="neutral_2_light">#514E49</color>
+
+    <color name="accent_1_dark">#52350B</color>
+    <color name="accent_1">#704A12</color>
+    <color name="accent_1_light">#8E6120</color>
+
+    <color name="accent_2_dark">#6A4C1B</color>
+    <color name="accent_2">#84611F</color>
+    <color name="accent_2_light">#A57A2E</color>
+
+    <color name="contrast_dark">#2E4028</color>
+    <color name="contrast">#3B5134</color>
+    <color name="contrast_light">#4F6B45</color>
+
+    <!--    <color name="casilla_6">#F7DCB9</color>-->
 
     <color name="yellow">#DFAF12</color>
     <color name="orange">#E97D23</color>
