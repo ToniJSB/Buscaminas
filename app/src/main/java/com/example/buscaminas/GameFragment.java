@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.helper.widget.Grid;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.LinearLayout;
@@ -62,7 +64,7 @@ public class GameFragment extends Fragment {
     private String timer = "00:00";
     private int maxCells;
     private int cellShowed;
-    private final Map<String, Integer> difficulty = new HashMap<>(){{
+    public final Map<String, Integer> difficulty = new HashMap<>(){{
         put(ROWS, 10);
         put(MINES, 11);
     }};
@@ -115,19 +117,20 @@ public class GameFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_game, container, false);
+        setupStats(view);
+        return view;
+
+    }
+
+    private void setupStats(View view){
         firstTouch = true;
         minesFlagged = 0;
         clicks = 0;
         maxCells = difficulty.get(ROWS) * COLUMNSQ - difficulty.get(MINES);
         cellShowed = 0;
-
-
         createCanvas(view);
 
-        return view;
-
     }
-
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -180,7 +183,16 @@ public class GameFragment extends Fragment {
         }
         view.setForegroundGravity(Gravity.CENTER);
         GridLayout grdL = view.findViewById(R.id.grid_buscaminas);
+        grdL.removeAllViews();
 //        grdL.setPadding(0,0,0,0);
+
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        params.bottomMargin = 40;
+        if (difficulty.get(ROWS) >= 17){
+            params.topMargin = 15;
+            grdL.setPadding(0,0,0,200);
+        }
+        grdL.setLayoutParams(params);
 
         grdL.setBackgroundResource(R.color.light_grey);
         for (int i = 0; i < difficulty.get(ROWS); i++) {
@@ -272,7 +284,7 @@ public class GameFragment extends Fragment {
         }
         setAroundMines(mines, parentView);
         setAroundClick(parentView, positionTag, new HashSet<>(),true);
-        printMines(parentView, mines);
+//        printMines(parentView, mines);
 
 
     }
@@ -487,6 +499,7 @@ public class GameFragment extends Fragment {
         }
     }
 
+
     private View.OnLongClickListener cellLongClick = new View.OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
@@ -622,6 +635,18 @@ public class GameFragment extends Fragment {
 
         TextInputEditText textName = popupView.findViewById(R.id.editTextName);
 
+        Button buttonRestart = popupView.findViewById(R.id.buttonRestart);
+
+        buttonRestart.setOnClickListener(new View.OnClickListener() {
+              @Override
+              public void onClick(View v) {
+
+                  setupStats(parent);
+                  popupWindow.dismiss();
+
+
+              }
+        });
         Button buttonSend = popupView.findViewById(R.id.buttonSend);
         buttonSend.setOnClickListener(new View.OnClickListener() {
                   @Override

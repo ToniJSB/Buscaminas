@@ -4,11 +4,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,26 +66,24 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //TODO mirar de como hacer nuevas instancias del game al cambiar la dificultad
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         Button buttonFacil = view.findViewById(R.id.buttonFacil);
         Button buttonNormal = view.findViewById(R.id.buttonNormal);
         Button buttonDificil = view.findViewById(R.id.buttonDificil);
-        if (buttonDificil.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
-            buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
+        if (MainActivity.gameFragment.difficulty.get("rows") == 10){
+            buttonFacil.setBackgroundResource(R.drawable.button_marked);
             buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
-            buttonDificil.setBackgroundResource(R.drawable.button_marked);
+            buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
         }
-        else if (buttonNormal.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
+        else if (MainActivity.gameFragment.difficulty.get("rows") == 15){
             buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
             buttonNormal.setBackgroundResource(R.drawable.button_marked);
             buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
         }
-        else if (buttonFacil.getBackground().getConstantState() == getResources().getDrawable(R.drawable.button_marked).getConstantState()){
-            buttonFacil.setBackgroundResource(R.drawable.button_marked);
+        else if (MainActivity.gameFragment.difficulty.get("rows") == 25){
+            buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
             buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
-            buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+            buttonDificil.setBackgroundResource(R.drawable.button_marked);
         }
         else{
             buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
@@ -113,7 +115,8 @@ public class SettingsFragment extends Fragment {
                 buttonNormal.setBackgroundResource(R.drawable.button_marked);
                 buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
                 GameFragment targetFragment = MainActivity.gameFragment;
-                targetFragment.setArguments(bundle);            }
+                targetFragment.setArguments(bundle);
+            }
         });
         buttonDificil.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +131,80 @@ public class SettingsFragment extends Fragment {
                 targetFragment.setArguments(bundle);
             }
         });
+        setupCustomDifficulty(view);
         return view;
+    }
+
+    private void setupCustomDifficulty(View view){
+        // Referenciar los componentes del layout
+
+        LinearLayout layoutForm = view.findViewById(R.id.layoutForm);
+        Button btnToggleForm = view.findViewById(R.id.btnToggleForm);
+        EditText inputRows = view.findViewById(R.id.inputRows);
+        EditText inputObstacles = view.findViewById(R.id.inputMines);
+        Button btnSubmit = view.findViewById(R.id.btnSubmit);
+        btnToggleForm.setBackgroundResource(R.drawable.button_unmarked);
+        layoutForm.setBackgroundResource(R.drawable.form_background);
+
+        inputObstacles.setTextColor(getResources().getColor(R.color.platinum_light));
+
+        // Configurar el botón para mostrar/ocultar el formulario
+        btnToggleForm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleFormVisibility(layoutForm, btnToggleForm);
+            }
+        });
+
+        // Configurar el botón de guardar
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                submitForm(inputRows,inputObstacles);
+            }
+        });
+    }
+    private void toggleFormVisibility(LinearLayout layoutForm, Button btnToggleForm) {
+        // Mostrar/ocultar el formulario
+        if (layoutForm.getVisibility() == View.GONE) {
+            layoutForm.setVisibility(View.VISIBLE);
+            btnToggleForm.setText("Ocultar Formulario");
+        } else {
+            layoutForm.setVisibility(View.GONE);
+            btnToggleForm.setText("Mostrar Formulario");
+        }
+    }
+
+    private void submitForm(EditText inputRows, EditText inputObstacles) {
+        // Validar y procesar los datos del formulario
+        String rowsText = inputRows.getText().toString().trim();
+        String minesText = inputObstacles.getText().toString().trim();
+        Bundle bundle = new Bundle();
+        if (TextUtils.isEmpty(rowsText) || TextUtils.isEmpty(minesText)) {
+            Toast.makeText(getContext(), "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int rows = Integer.parseInt(rowsText);
+        int mines = Integer.parseInt(minesText);
+
+        // Validaciones adicionales (opcional)
+        if (rows <= 0 || mines <= 0) {
+            Toast.makeText(getContext(), "The values should be bigger than 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mines > rows*9) {
+            Toast.makeText(getContext(), "There can't be so many Mines.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        bundle.putInt("rows",rows);
+        bundle.putInt("columns",15);
+        bundle.putInt("mines",mines);
+        GameFragment targetFragment = MainActivity.gameFragment;
+        targetFragment.setArguments(bundle);
+
+        // Procesar los valores
+        Toast.makeText(getContext(), "Rows: " + rows + ", Mines: " + mines, Toast.LENGTH_SHORT).show();
     }
 }
