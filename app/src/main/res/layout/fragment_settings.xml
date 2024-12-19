@@ -22,30 +22,34 @@
             android:layout_marginBottom="20dp"
             android:text="Selecciona Dificultad"
             android:textColor="@color/accent_1_light"
-            android:textSize="21dp" />
+            android:textSize="30dp" />
 
         <Button
             android:id="@+id/buttonFacil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:text="Facil" />
 
         <Button
             android:id="@+id/buttonNormal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:text="Normal" />
 
         <Button
             android:id="@+id/buttonDificil"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_margin="15dp"
             android:text="Dificil" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:layout_gravity="center"
             android:padding="16dp">
 
             <!-- Botón para mostrar/ocultar el formulario -->
@@ -53,6 +57,9 @@
                 android:id="@+id/btnToggleForm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginBottom="15dp"
                 android:text="Mostrar Formulario" />
 
             <!-- Contenedor desplegable -->
@@ -77,7 +84,7 @@
                     android:id="@+id/inputMines"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Número de Obstáculos"
+                    android:hint="Número de minas"
                     android:inputType="number" />
 
                 <!-- Botón para enviar -->

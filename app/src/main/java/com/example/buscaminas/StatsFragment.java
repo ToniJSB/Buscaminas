@@ -107,11 +107,41 @@ public class StatsFragment extends Fragment {
         scrollView.isVerticalScrollBarEnabled();
         ViewGroup.LayoutParams paramsScroll = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         scrollView.setLayoutParams(paramsScroll);
+
         LinearLayout linearLayout = new LinearLayout(getContext());
         GridLayout gridLayout = new GridLayout(getContext());
         gridLayout.setOrientation(GridLayout.VERTICAL);
 
+        createTitle(statsCols, gridLayout, titlesLinearLayout, params);
 
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)));
+
+
+        grid.addView(titlesLinearLayout);
+        appendLayoutToGrid(names, statsCols.toArray(new String[0]), gridLayout, containerWidth, params);
+//        grid.setOrientation(GridLayout.VERTICAL);
+        linearLayout.addView(gridLayout);
+        scrollView.addView(linearLayout);
+        grid.addView(scrollView);
+
+
+        sortGridLayoutByTitle(gridLayout,statsCols.indexOf("Score"));
+        sortGridLayoutByTitle(gridLayout,statsCols.indexOf("Score"));
+    }
+
+    private void appendLayoutToGrid(String[] names, String[] cols, GridLayout gridLayout,int containerWidth, GridLayout.LayoutParams params){
+
+        for (String name : names){
+            if (!name.equals("")){
+                LinearLayout ll = createRow(cols, name, params);
+                ll.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(containerWidth,126)));
+                gridLayout.addView(ll);
+            }
+        }
+    }
+
+    private void createTitle(List<String> statsCols, GridLayout gridLayout, LinearLayout titlesLinearLayout, GridLayout.LayoutParams params){
         for (String col : statsCols){
             TextView titleTv = createTextView(col, params);
             titleTv.setOnClickListener(new View.OnClickListener() {
@@ -123,42 +153,22 @@ public class StatsFragment extends Fragment {
             titleTv.setBackgroundResource(R.drawable.titles_cell);
             titlesLinearLayout.addView(titleTv);
         }
+    }
 
-        grid.addView(titlesLinearLayout);
-
-
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        linearLayout.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)));
-
-        for (String name : names){
-            System.out.println(name);
-            System.out.println("name");
-            if (!name.equals("")){
-
-                LinearLayout ll = new LinearLayout(getContext());
-                ll.setOrientation(LinearLayout.HORIZONTAL);
-                for (String col : statsCols){
-                    TextView textVValues;
-                    if (col.equals("Name")){
-                        textVValues = createTextView(name, params);
-                    }else{
-                        String value = PreferencesHelper.getData(getContext(),name,col,"");
-                        System.out.println("value");
-                        System.out.println(value);
-                        textVValues = createTextView(value, params);
-                    }
-//                    ll.setId("user"+name);
-                    textVValues.setGravity(Gravity.CENTER);
-                    ll.addView(textVValues);
-                }
-                ll.setLayoutParams(new GridLayout.LayoutParams( new ViewGroup.LayoutParams(containerWidth,126)));
-                gridLayout.addView(ll);
+    private LinearLayout createRow(String[] cols, String name, GridLayout.LayoutParams params){
+        LinearLayout ll = new LinearLayout(getContext());
+        ll.setOrientation(LinearLayout.HORIZONTAL);
+        for (String col : cols){
+            TextView textVValues;
+            if (col.equals("Name")){
+                textVValues = createTextView(name, params);
+            }else{
+                String value = PreferencesHelper.getData(getContext(),name,col,"");
+                textVValues = createTextView(value, params);
             }
+            ll.addView(textVValues);
         }
-//        grid.setOrientation(GridLayout.VERTICAL);
-        linearLayout.addView(gridLayout);
-        scrollView.addView(linearLayout);
-        grid.addView(scrollView);
+        return ll;
     }
     private TextView createTextView(String value, GridLayout.LayoutParams params){
         TextView tv = new TextView(getContext());
@@ -173,6 +183,7 @@ public class StatsFragment extends Fragment {
         tv.setTextColor(getResources().getColor(R.color.platinum_light));
         tv.setBackgroundResource(R.drawable.textview_border);
         tv.setLayoutParams(params);
+        tv.setGravity(Gravity.CENTER);
         tv.setText(value);
         return tv;
     }

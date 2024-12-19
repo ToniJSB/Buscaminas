@@ -158,7 +158,6 @@ public class GameFragment extends Fragment {
     private void createChrono(View parentView){
         timerTextView = parentView.findViewById(R.id.chrono);
         startTime = System.currentTimeMillis();
-        // Iniciar el cronómetro
         handler.post(timerRunnable);
     }
     private void stopChrono(View parentView){
@@ -184,7 +183,6 @@ public class GameFragment extends Fragment {
         view.setForegroundGravity(Gravity.CENTER);
         GridLayout grdL = view.findViewById(R.id.grid_buscaminas);
         grdL.removeAllViews();
-//        grdL.setPadding(0,0,0,0);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
         params.bottomMargin = 40;
@@ -200,11 +198,9 @@ public class GameFragment extends Fragment {
             grdL.addView(ll);
             grdL.setOrientation(GridLayout.VERTICAL);
         }
-        System.out.println(simplyfied);
     }
     @NonNull
     private LinearLayout getLinearLayout(int columns, CeldaModel[] board, int row) {
-
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int parentWidth = metrics.widthPixels; // ancho absoluto en pixels
@@ -229,7 +225,6 @@ public class GameFragment extends Fragment {
             button.setTag(R.attr.state,State.TAPADO);
             button.setTag(R.attr.minesNear,0);
 
-//            button.setId(row+j);
             button.setOnClickListener(cellClick);
             button.setBackgroundResource(R.drawable.cell_border);
             button.setPadding(0,0,0,0);
@@ -284,7 +279,6 @@ public class GameFragment extends Fragment {
         }
         setAroundMines(mines, parentView);
         setAroundClick(parentView, positionTag, new HashSet<>(),true);
-//        printMines(parentView, mines);
 
 
     }
@@ -297,7 +291,6 @@ public class GameFragment extends Fragment {
         View nextRowCurrColView = ViewFinder.findViewsWithTag(parentView, nextRow+"|"+column, R.attr.position ).get(0);
         View nextRowNextColView = ViewFinder.findViewsWithTag(parentView, nextRow+"|"+ nextCol, R.attr.position ).get(0);
 
-        int color = colors[(int) (Math.random() * colors.length)];
 
         currRowNextColView.setBackgroundResource(colors[(int) (Math.random() * colors.length)]);
         nextRowCurrColView.setBackgroundResource(colors[(int) (Math.random() * colors.length)]);
@@ -495,7 +488,6 @@ public class GameFragment extends Fragment {
         for (String mina : mines){
             Button mine =(Button) ViewFinder.findViewsWithTag(parentView, mina, R.attr.position ).get(0);
             mine.setBackgroundResource(R.drawable.mine_cell);
-
         }
     }
 
@@ -505,32 +497,24 @@ public class GameFragment extends Fragment {
         public boolean onLongClick(View v) {
             if (v.getTag(R.attr.visible).equals(false)){
                 showPopupMenu(v);
-
-
             }
             return true;
         }
     };
     private View.OnClickListener cellClick = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            Button button = (Button) v;
-            System.out.println(v.getTag(R.attr.position).toString());
-            System.out.println(v.getTag(R.attr.minesNear).toString());
-
+        public void onClick(View buttonClicked) {
+            Button button = (Button) buttonClicked;
             if (firstTouch){
                 firstTouch = false;
                 setCanvasBombs(button);
                 clicks++;
                 createChrono((View) button.getParent().getParent().getParent().getParent().getParent());
-
             }
             if (!button.getTag(R.attr.state).equals(State.BANDERA)){
                 if(button.getTag(R.attr.isMine).equals(true)){
                     clicks++;
-
                     stopChrono((View) button.getParent().getParent());
-                    System.out.println(v.findViewById(R.id.chrono));
                     printMines((View) button.getParent().getParent(), mines);
                     invalidAllButtons((View) button.getParent().getParent());
                     showFinishForm((View) button.getParent().getParent());
@@ -542,13 +526,10 @@ public class GameFragment extends Fragment {
                     button.setTag(R.attr.visible,true);
                     if ((int) button.getTag(R.attr.minesNear) != 0){
 
-                        button.setText(v.getTag(R.attr.minesNear).toString());
+                        button.setText(buttonClicked.getTag(R.attr.minesNear).toString());
                     }
-                    setAroundClick((View)v.getParent().getParent(), v.getTag(R.attr.position).toString(), new HashSet<>(), false);
-                    System.out.println(cellShowed);
-                    System.out.println("cellShowed");
-                    System.out.println(maxCells);
-                    List<View> showedButtons = ViewFinder.findViewsWithTag((View)v.getParent().getParent(), State.VOLTEADO, R.attr.state);
+                    setAroundClick((View)buttonClicked.getParent().getParent(), buttonClicked.getTag(R.attr.position).toString(), new HashSet<>(), false);
+                    List<View> showedButtons = ViewFinder.findViewsWithTag((View)buttonClicked.getParent().getParent(), State.VOLTEADO, R.attr.state);
                     if (showedButtons.size() == maxCells){
                         stopChrono((View) button.getParent().getParent());
                         int tmpMinesFlagged = minesFlagged;
@@ -632,6 +613,13 @@ public class GameFragment extends Fragment {
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 true);
+        popupWindow.setOutsideTouchable(false);
+
+        int score = calcScore();
+
+        TextView textScore = popupView.findViewById(R.id.scoreDone);
+        textScore.setText("Score: "+score);
+        textScore.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 
         TextInputEditText textName = popupView.findViewById(R.id.editTextName);
 
@@ -647,6 +635,7 @@ public class GameFragment extends Fragment {
 
               }
         });
+
         Button buttonSend = popupView.findViewById(R.id.buttonSend);
         buttonSend.setOnClickListener(new View.OnClickListener() {
                   @Override
@@ -654,7 +643,6 @@ public class GameFragment extends Fragment {
                     String userName = textName.getText().toString();
                     if (!userName.isEmpty() && !userName.contains("|")){
                         String userNameSaved = PreferencesHelper.getData(getContext(), "", "names", "");
-                        int score = calcScore();
                         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         if (userNameSaved.isEmpty()){
