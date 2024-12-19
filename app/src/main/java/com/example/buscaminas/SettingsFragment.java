@@ -70,26 +70,33 @@ public class SettingsFragment extends Fragment {
         Button buttonFacil = view.findViewById(R.id.buttonFacil);
         Button buttonNormal = view.findViewById(R.id.buttonNormal);
         Button buttonDificil = view.findViewById(R.id.buttonDificil);
-        if (MainActivity.gameFragment.difficulty.get("rows") == 10){
+        Button btnToggleForm = view.findViewById(R.id.btnToggleForm);
+
+        if (MainActivity.gameFragment.difficulty.get("rows") == 10 && MainActivity.gameFragment.difficulty.get("mines") == 11){
             buttonFacil.setBackgroundResource(R.drawable.button_marked);
             buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
             buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+            btnToggleForm.setBackgroundResource(R.drawable.button_unmarked);
+
         }
-        else if (MainActivity.gameFragment.difficulty.get("rows") == 15){
+        else if (MainActivity.gameFragment.difficulty.get("rows") == 15 && MainActivity.gameFragment.difficulty.get("mines") == 15){
             buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
             buttonNormal.setBackgroundResource(R.drawable.button_marked);
             buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
+            btnToggleForm.setBackgroundResource(R.drawable.button_unmarked);
+
         }
-        else if (MainActivity.gameFragment.difficulty.get("rows") == 25){
+        else if (MainActivity.gameFragment.difficulty.get("rows") == 25 && MainActivity.gameFragment.difficulty.get("mines") == 25){
             buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
             buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
             buttonDificil.setBackgroundResource(R.drawable.button_marked);
+            btnToggleForm.setBackgroundResource(R.drawable.button_unmarked);
         }
         else{
             buttonFacil.setBackgroundResource(R.drawable.button_unmarked);
             buttonNormal.setBackgroundResource(R.drawable.button_unmarked);
             buttonDificil.setBackgroundResource(R.drawable.button_unmarked);
-
+            btnToggleForm.setBackgroundResource(R.drawable.button_marked);
         }
         Bundle bundle = new Bundle();
         buttonFacil.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +178,7 @@ public class SettingsFragment extends Fragment {
             btnToggleForm.setText("Ocultar Formulario");
         } else {
             layoutForm.setVisibility(View.GONE);
-            btnToggleForm.setText("Mostrar Formulario");
+            btnToggleForm.setText("Dificultad personalizada");
         }
     }
 
